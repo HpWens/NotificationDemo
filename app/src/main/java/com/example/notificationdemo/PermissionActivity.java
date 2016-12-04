@@ -3,6 +3,7 @@ package com.example.notificationdemo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -183,6 +184,11 @@ public abstract class PermissionActivity extends AppCompatActivity {
                 Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getPackageName()));
         startActivity(intent);
+    }
+
+    //存储数据
+    protected SharedPreferences getPrefer() {
+        return getSharedPreferences("DEMO_PREFERENCES", MODE_PRIVATE);
     }
 
 }

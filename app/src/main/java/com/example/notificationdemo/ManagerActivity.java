@@ -24,6 +24,8 @@ public class ManagerActivity extends PermissionActivity {
 
     private DownloadApkReceiver downloadApkReceiver;
 
+    private static final int APK_EXIST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +55,18 @@ public class ManagerActivity extends PermissionActivity {
     }
 
     private void downloadApk() {
-        final long id = DownloadManagerUtils.downloadApk(this, URL, "APK更新", "更新包下载中...");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                queryDownloadManager(id);
-            }
-        }, 1000);
+        int existState = getPrefer().getInt("APK_EXIST", 0);
+        if (existState == APK_EXIST) {
+            DownloadManagerUtils.installApk(this);
+        } else {
+            final long id = DownloadManagerUtils.downloadApk(this, URL, "APK更新", "更新包下载中...");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    queryDownloadManager(id);
+                }
+            }, 1000);
+        }
     }
 
 

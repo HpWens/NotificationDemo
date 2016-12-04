@@ -2,10 +2,14 @@ package com.example.notificationdemo.utils;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.File;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by boby on 2016/12/2.
@@ -52,7 +56,7 @@ public class DownloadManagerUtils {
         }
 
         try {
-           request = new DownloadManager.Request(Uri.parse(appUrl));
+            request = new DownloadManager.Request(Uri.parse(appUrl));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -67,7 +71,7 @@ public class DownloadManagerUtils {
             request.setNotificationVisibility(DownloadManager.Request
                     .VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         }
-        
+
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         request.setDestinationInExternalPublicDir(SAVE_APP_LOCATION, SAVE_APP_NAME);
 
@@ -96,6 +100,22 @@ public class DownloadManagerUtils {
     // 最小版本号大于9
     private static boolean isDownloadManagerAvailable() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+    }
+
+
+    // 安装Apk
+    public static void installApk(Context context) {
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            String filePath = DownloadManagerUtils.APP_FILE_NAME;
+            i.setDataAndType(Uri.parse("file://" + filePath), "application/vnd.android" +
+                    ".package-archive");
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
+        } catch (Exception e) {
+            Log.e(TAG, "安装失败");
+            e.printStackTrace();
+        }
     }
 
 
