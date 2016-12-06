@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by boby on 2016/12/2.
@@ -108,6 +110,12 @@ public class DownloadManagerUtils {
         try {
             Intent i = new Intent(Intent.ACTION_VIEW);
             String filePath = DownloadManagerUtils.APP_FILE_NAME;
+            if (!new File(filePath).exists()) {
+                Toast.makeText(context, "文件不存在!", Toast.LENGTH_SHORT).show();
+                context.getSharedPreferences("DEMO_PREFERENCES", MODE_PRIVATE).edit()
+                        .putInt("APK_EXIST", 0).commit();
+                return;
+            }
             i.setDataAndType(Uri.parse("file://" + filePath), "application/vnd.android" +
                     ".package-archive");
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
